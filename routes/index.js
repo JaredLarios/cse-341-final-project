@@ -1,5 +1,7 @@
 const router = require('express').Router()
+const authorRouter = require("./authorsRoute")
 
-router.get("/", (req, res ) => res.send("Hello World"))
+router.use("/author", authorRouter);
+
 
 module.exports = router;
