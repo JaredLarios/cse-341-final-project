@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-//const mongodb = require('./db/connect');
+const mongodb = require('./data/database');
 const cors = require('cors');
 
 const port = process.env.PORT || 8080;
@@ -26,11 +26,12 @@ app
             })
     })
 
-mongodb.initDb((err) => {
-    if (err) {
-        console.log(err);
-    } else {
-        app.listen(port);
-        console.log(`Connected to DB and listening on ${port}`);
+mongodb.initDB((err) => {
+    if(err) {
+        console.log("DB: "+ err);
+    }
+    else {
+        app.listen(port, 
+            () => {console.log(`Database init and server Running on port ${port}`)});
     }
 });
