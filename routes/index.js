@@ -4,6 +4,7 @@ const booksRouter = require("./booksRoute")
 const usersRouter = require("./usersRoute")
 const localsRouter = require("./localsRoute")
 
+router.use("/", require("./swagger"))
 router.use("/author", authorRouter);
 router.use("/books", booksRouter);
 router.use("/users", usersRouter);
