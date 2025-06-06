@@ -36,9 +36,9 @@ const getAll = async (req, res, next) => {
         
         if(!response) throw createError(404, "Not Actors found");
 
-        response.toArray().then((movies) => {
+        response.toArray().then((author) => {
             res.setHeader("Content-Type", "application/json");
-            res.status(200).json(movies);
+            res.status(200).json(author);
         })
     } catch (err) {
         next(err);
@@ -104,10 +104,9 @@ const addAuthors = async (req, res, next) => {
         lastname: req.body.lastname,
         dateOfBirth: req.body.dateOfBirth,
         country: req.body.country,
-        books: req.body.books?.map(book => ({
-            title: book.title,
-            releaseDate: book.releaseDate
-        })) ?? [],
+        books: req.body.books?.map(bookId => (
+            new ObjectId(bookId)
+        )) ?? [],
         gender: req.body.gender,
         biography: req.body.biography,
         alive: req.body.alive
@@ -129,10 +128,9 @@ const updateAuthors = async (req, res, next) => {
             lastname: req.body.lastname,
             dateOfBirth: req.body.dateOfBirth,
             country: req.body.country,
-            books: req.body.books?.map(book => ({
-                title: book.title,
-                releaseDate: book.releaseDate
-            })) ?? [],
+            books: req.body.books?.map(bookId => (
+                new ObjectId(bookId)
+            )) ?? [],
             gender: req.body.gender,
             biography: req.body.biography,
             alive: req.body.alive

@@ -1,33 +1,55 @@
-const { check } = require('express-validator');
+const { body, query, param } = require('express-validator')
 
-const localValidationRules = () =>{
+const localValidationRules = () => {
     return [
-    check('name')
-        .trim()
+        body('name')
+            .isString()
+            .trim()
+            .withMessage('Name must be a String'),
+        body('address')
+            .isString()
+            .trim()
+            .withMessage('Address must be a String'),
+        body('booksOnStockIDs')
+            .optional()
+            .isArray()
+            .withMessage('Books must be an Array')
+            .custom((value) => {
+                if (!value.every(id => 
+                    id.length === 24 && 
+                    /^[0-9A-Fa-f]{24}$/.test(id)
+                )) {
+                    throw new Error('Each book ID must be a 24 character hex string');
+                }
+                return true;
+            }),
+        body('phone')
+            .isInt()
+            .withMessage('Phone must be a valid phone number'),
+    ]
+}
+
+const localValidationQuery = () => {
+    return [
+        query('name')
         .isString()
-        .notEmpty()
-        .withMessage('Name is required and must be a string'),
-
-    check('address')
         .trim()
-        .isString()
-        .notEmpty()
-        .withMessage('Address is required and must be a string'),
+        .withMessage('Name must be a String'),
+    ]
+}
 
-    check('booksOnStockIDs')
-        .isArray()
-        .withMessage('BooksOnStockIDs must be an array')
-        .custom((value) => {
-            if (!Array.isArray(value)) return false;
-            return value.every((id) => typeof id === 'string' || typeof id === 'number');
-        })
-        .withMessage('BooksOnStockIDs must contain valid IDs'),
+const localValidationId = () => {
+    return [
+        param('id')
+            .isLength({ min: 24, max: 24 })
+            .withMessage('ID must be a 24 character hex string')
+            .isHexadecimal()
+            .withMessage('ID must be hexadecimal')
+    ]
+}
 
-    check('phone')
-        .isNumeric()
-        .notEmpty()
-        .withMessage('Phone must be a valid number')
-]
-};
-
-module.exports = localValidationRules;
+module.exports = {
+    localValidationRules,
+    localValidationQuery,
+    localValidationId
+}
