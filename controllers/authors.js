@@ -34,7 +34,7 @@ const getAll = async (req, res, next) => {
                                     .collection("Authors")
                                     .aggregate([lookup,aggregateSetting]);
         
-        if(!response) throw createError(404, "Not Actors found");
+        if(!response) throw createError(404, "Not Authors found");
 
         response.toArray().then((author) => {
             res.setHeader("Content-Type", "application/json");
@@ -51,7 +51,7 @@ const getSingleById = async (req, res, next) => {
         const authorId = new ObjectId(req.params.id);
         
         const validID = await validateExistingID(authorId);
-        if(!validID) throw createError(404, "Actors ID does not exist");
+        if(!validID) throw createError(404, "Authors ID does not exist");
 
         const response = await mongodb
                                     .getDatabase()
@@ -89,7 +89,7 @@ const getByQueries = async (req, res, next) => {
                                         aggregateSetting
                                     ]).toArray();
 
-        if(!response) throw createError(404, "Actors Name does not exist");
+        if(!response) throw createError(404, "Actors Name not found");
         
         return res.status(200).json(response);
     } catch (err) {
