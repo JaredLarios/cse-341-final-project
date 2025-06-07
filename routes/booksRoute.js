@@ -1,18 +1,31 @@
-const router = require('express').Router()
+const express = require('express');
+const router = express.Router();
+const booksController = require("../controllers/books");
+
+const {
+    booksValidationRules,
+    bookValidationQuery,
+    bookValidationId
+} = require('../helpers/booksValidator');
+const validate = require('../helpers/validate')
+
+
 
 // GET 
-router.get("/", (req, res) => res.send("Get All"))
-router.get("/:id", (req, res) => res.send("Get Single by ID"))
-router.get("/search", (req, res) => res.send("Get Single by Title"))
+router.get('/', booksController.getAll);
+router.get('/id/:id', bookValidationId(), validate, booksController.getSingleById);
+router.get('/search', bookValidationQuery(), validate, booksController.getByQuery);
 
 // POST 
-router.post("/", (req, res) => res.send("Hello Books"))
+router.post('/', booksValidationRules(), validate, booksController.createBook);
 
 // PUT 
-router.put("/:id", (req, res) => res.send("Hello Books"))
+router.put('/id/:id', bookValidationId(),validate, booksController.updateBook);
+
 
 // DELETE 
-router.delete("/:id", (req, res) => res.send("Hello Books"))
+router.delete('/id/:id', bookValidationId(), validate, booksController.deleteBook);
+
 
 
 module.exports = router;
