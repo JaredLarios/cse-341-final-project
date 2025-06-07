@@ -6,7 +6,7 @@ const doc = {
         title: "Movies API",
         description: "Movies database for cse project 2",
     },
-    host: 'https://cse-341-final-project-3uvz.onrender.com',
+    host: 'cse-341-final-project-3uvz.onrender.com',
     schemes: ["https"],
 };
 
