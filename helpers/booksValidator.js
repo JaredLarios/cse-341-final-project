@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, query, param } = require('express-validator')
 
 
 const booksValidationRules = () => {
@@ -21,10 +21,10 @@ const booksValidationRules = () => {
             .withMessage('Language is required and must be a string'),
 
         body('authorId')
-            .isString()
-            .trim()
-            .notEmpty()
-            .withMessage('Author ID is required and must be a string'),
+            .isLength({ min: 24, max: 24 })
+            .withMessage('ID must be a 24 character hex string')
+            .isHexadecimal()
+            .withMessage('ID must be hexadecimal'),
 
         body('quantity')
             .isString()
@@ -39,6 +39,27 @@ const booksValidationRules = () => {
     ]
 };
 
+const bookValidationQuery = () => {
+    return [
+    query('title')
+        .isString()
+        .trim()
+        .withMessage('Name must be a String')
+    ]
+}
+
+const bookValidationId = () => {
+    return [
+        param('id')
+            .isLength({ min: 24, max: 24 })
+            .withMessage('ID must be a 24 character hex string')
+            .isHexadecimal()
+            .withMessage('ID must be hexadecimal')
+    ]
+}
+
 module.exports = {
-    booksValidationRules
+    booksValidationRules,
+    bookValidationQuery,
+    bookValidationId
 };

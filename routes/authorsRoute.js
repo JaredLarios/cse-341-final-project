@@ -1,18 +1,26 @@
 const router = require('express').Router()
+const authorsController = require('../controllers/authors')
+const validate = require('../helpers/validate')
+const { 
+    authorValidationRules,
+    authorValidationQuery,
+    authorValidationId
+} = require('../helpers/authorsValidator')
+
 
 // GET 
-router.get("/", (req, res) => res.send("Get All"))
-router.get("/:id", (req, res) => res.send("Get Single by ID"))
-router.get("/search", (req, res) => res.send("Get Single by Name and Lastname"))
+router.get("/", authorsController.getAll)
+router.get("/id/:id", authorValidationId(), validate, authorsController.getSingleById)
+router.get("/search", authorValidationQuery(), validate, authorsController.getByQueries)
 
 // POST 
-router.post("/", (req, res) => res.send("Hello Authors"))
+router.post("/", authorValidationRules(), authorsController.addAuthors)
 
 // PUT 
-router.put("/:id", (req, res) => res.send("Hello Authors"))
+router.put("/id/:id", authorValidationRules(), validate, authorsController.updateAuthors)
 
 // DELETE 
-router.delete("/:id", (req, res) => res.send("Hello Authors"))
+router.delete("/id/:id", authorValidationId(), validate, authorsController.deleteAuthors)
 
 
 module.exports = router;
