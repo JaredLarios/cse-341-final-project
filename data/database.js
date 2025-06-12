@@ -27,7 +27,17 @@ const getDatabase = () =>{
     return database;
 }
 
+// Add server cleanup function
+const cleanup = async () => {
+    if (database) {
+        await database.close();
+        database = null;
+    }
+};
+
+
 module.exports = {
     initDB,
-    getDatabase
+    getDatabase,
+    cleanup
 }

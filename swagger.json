@@ -11,6 +11,26 @@
     "https"
   ],
   "paths": {
+    "/login": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/author/": {
       "get": {
         "tags": [
@@ -207,7 +227,13 @@
     },
     "/books/": {
       "get": {
+        "tags": [
+          "Books"
+        ],
         "description": "",
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -215,16 +241,54 @@
         }
       },
       "post": {
+        "tags": [
+          "Books"
+        ],
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "example": "any"
+                },
+                "releaseDate": {
+                  "example": "any"
+                },
+                "language": {
+                  "example": "any"
+                },
+                "authorsID": {
+                  "example": "any"
+                },
+                "quantity": {
+                  "example": "any"
+                },
+                "available": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           }
         }
       }
     },
-    "/books/{id}": {
+    "/books/id/{id}": {
       "get": {
+        "tags": [
+          "Books"
+        ],
         "description": "",
         "parameters": [
           {
@@ -237,10 +301,16 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           }
         }
       },
       "put": {
+        "tags": [
+          "Books"
+        ],
         "description": "",
         "parameters": [
           {
@@ -248,15 +318,48 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "example": "any"
+                },
+                "releaseDate": {
+                  "example": "any"
+                },
+                "language": {
+                  "example": "any"
+                },
+                "authorsID": {
+                  "example": "any"
+                },
+                "quantity": {
+                  "example": "any"
+                },
+                "available": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           }
         }
       },
       "delete": {
+        "tags": [
+          "Books"
+        ],
         "description": "",
         "parameters": [
           {
@@ -267,18 +370,37 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           }
         }
       }
     },
     "/books/search": {
       "get": {
+        "tags": [
+          "Books"
+        ],
         "description": "",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           }
         }
       }
@@ -363,7 +485,13 @@
     },
     "/locals/": {
       "get": {
+        "tags": [
+          "Locals"
+        ],
         "description": "",
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -371,16 +499,51 @@
         }
       },
       "post": {
+        "tags": [
+          "Locals"
+        ],
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "address": {
+                  "example": "any"
+                },
+                "phone": {
+                  "example": "any"
+                },
+                "books": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
-    "/locals/{id}": {
+    "/locals/id/{id}": {
       "get": {
+        "tags": [
+          "Locals"
+        ],
         "description": "",
         "parameters": [
           {
@@ -393,10 +556,16 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           }
         }
       },
       "put": {
+        "tags": [
+          "Locals"
+        ],
         "description": "",
         "parameters": [
           {
@@ -404,15 +573,42 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "address": {
+                  "example": "any"
+                },
+                "phone": {
+                  "example": "any"
+                },
+                "books": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           }
         }
       },
       "delete": {
+        "tags": [
+          "Locals"
+        ],
         "description": "",
         "parameters": [
           {
@@ -423,18 +619,34 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           }
         }
       }
     },
     "/locals/search": {
       "get": {
+        "tags": [
+          "Locals"
+        ],
         "description": "",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           }
         }
       }

@@ -108,7 +108,7 @@ const createBook = async (req, res, next) => {
       title: req.body.title,
       releaseDate: req.body.releaseDate,
       language: req.body.language,
-      authorsID: req.body.authorsID,
+      authorId: req.body.authorsID,
       quantity: req.body.quantity,
       available: req.body.available
     };
