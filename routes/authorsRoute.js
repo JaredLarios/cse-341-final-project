@@ -14,7 +14,7 @@ router.get("/id/:id", authorValidationId(), validate, authorsController.getSingl
 router.get("/search", authorValidationQuery(), validate, authorsController.getByQueries)
 
 // POST 
-router.post("/", authorValidationRules(), authorsController.addAuthors)
+router.post("/", authorValidationRules(), validate, authorsController.addAuthors)
 
 // PUT 
 router.put("/id/:id", authorValidationRules(), validate, authorsController.updateAuthors)
