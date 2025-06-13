@@ -180,7 +180,6 @@ describe('GET /books, /books/id, books/search', () => {
     });
 
     it('Should fidn all books', async () => {
-        const dbResponse = await testDb.collection('Books').find().toArray();
         const response = await request(app)
             .get(`/books/`);
 
@@ -220,10 +219,270 @@ describe('GET /books, /books/id, books/search', () => {
         expect(res.statusCode).toBe(200);
         expect(res.body.length).toBeGreaterThan(0);
     })
+
     it('Should create a book', async () => {
         const res = await request(app)
             .get(`/books/search?title=`);
 
         expect(res.statusCode).toBe(422);
+    })
+})
+
+describe('PUT /books/id', () => {
+    let testDb;
+    const bookData = {
+        title: 'Dias de Gracias - test',
+        releaseDate: '1967-05-30',
+        language: 'spa',
+        authorId: '6840f2c9a41bbeb60f77d2fb',
+        quantity: "2",
+        available: true
+    };
+
+    beforeEach(() => {
+        testDb = database.getDatabase().db();
+    });
+
+    it('Should update book', async () => {
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(bookData);
+        
+        expect(response.statusCode).toBe(204);
+
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.quantity).not.toBe(updateDB.quantity)
+    })
+
+    it('Should not update book due to bad id', async () => {
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}ss`).send(bookData);
+        
+        expect(response.statusCode).toBe(422);
+    })
+
+    it('Should update book due to bad title', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.title = ''
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.title).toBe(updateDB.title)
+    })
+
+    it('Should update book due to missing title', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.title = null
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.title).toBe(updateDB.title)
+    })
+
+    it('Should update book due to missing release date', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.releaseDate = ''
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.title).toBe(updateDB.title)
+    })
+
+    it('Should update book due to missing release date', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.releaseDate = null
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.releaseDate).toBe(updateDB.releaseDate)
+    })
+
+    it('Should update book due to missing language', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.language = ''
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.title).toBe(updateDB.title)
+    })
+
+    it('Should update book due to missing language', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.language = null
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.language).toBe(updateDB.language)
+    })
+
+    it('Should update book due to missing authorId', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.authorId = ''
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.title).toBe(updateDB.title)
+    })
+
+    it('Should update book due to missing authorId', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.authorId = null
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.authorId).toBe(updateDB.authorId)
+    })
+
+    it('Should update book due to missing quantity', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.quantity = ''
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.title).toBe(updateDB.title)
+    })
+
+    it('Should update book due to missing quantity', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.quantity = null
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.quantity).toBe(updateDB.quantity)
+    })
+
+    it('Should update book due to missing available', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.available = ''
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.title).toBe(updateDB.title)
+    })
+
+    it('Should update book due to missing available', async () => {
+        let updateBookData = { ...bookData };
+        updateBookData.available = null
+
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+        
+        const response = await request(app)
+            .put(`/books/id/${id}`).send(updateBookData);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(responseDB.available).toBe(updateDB.available)
+    })
+})
+
+describe('DELETE /books/id', () => {
+    let testDb;
+    const bookData = {
+        title: 'Dias de Gracias - test',
+        releaseDate: '1967-05-30',
+        language: 'spa',
+        authorId: '6840f2c9a41bbeb60f77d2fb',
+        quantity: "2",
+        available: true
+    };
+
+    beforeEach(() => {
+        testDb = database.getDatabase().db();
+    });
+
+    it('Should not delete book', async () => {
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .delete(`/books/id/${id}ss`);
+
+        expect(response.statusCode).toBe(422);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(updateDB).not.toBeNull();
+    })
+
+    it('Should delete book', async () => {
+        const responseDB = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = responseDB._id;
+
+        const response = await request(app)
+            .delete(`/books/id/${id}`);
+
+        expect(response.statusCode).toBe(204);
+        const updateDB = await testDb.collection('Books').findOne({title: bookData.title})
+        expect(updateDB).toBeNull();
     })
 })

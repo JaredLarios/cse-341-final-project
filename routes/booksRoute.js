@@ -20,7 +20,7 @@ router.get('/search', bookValidationQuery(), validate, booksController.getByQuer
 router.post('/', booksValidationRules(), validate, booksController.createBook);
 
 // PUT 
-router.put('/id/:id', bookValidationId(),validate, booksController.updateBook);
+router.put('/id/:id', bookValidationId(), booksValidationRules(), validate, booksController.updateBook);
 
 
 // DELETE 

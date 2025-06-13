@@ -17,7 +17,7 @@ router.get("/search", authorValidationQuery(), validate, authorsController.getBy
 router.post("/", authorValidationRules(), validate, authorsController.addAuthors)
 
 // PUT 
-router.put("/id/:id", authorValidationRules(), validate, authorsController.updateAuthors)
+router.put("/id/:id", authorValidationId(), authorValidationRules(), validate, authorsController.updateAuthors)
 
 // DELETE 
 router.delete("/id/:id", authorValidationId(), validate, authorsController.deleteAuthors)
