@@ -44,6 +44,7 @@ const bookValidationQuery = () => {
     return [
     query('title')
         .isString()
+        .isLength({min: 1})
         .trim()
         .withMessage('Name must be a String')
     ]

@@ -1,6 +1,5 @@
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require('mongodb');
-const { app } = require('../server');
 const database = require('../data/database');
 
 let mongoServer;
@@ -20,10 +19,8 @@ beforeAll(async () => {
     await db.createCollection('Authors');
     await db.createCollection('Locals');
 
-    jest.spyOn(database, 'getDatabase').mockImplementation(() => ({
-        db: () => db,
-        collection: (name) => db.collection(name)
-    }))
+    database.initDB = jest.fn((callback) => callback(null, connection));
+    database.getDatabase = jest.fn(() => connection);
 });
 
 afterAll(async () => {
@@ -39,9 +36,7 @@ afterAll(async () => {
     if (mongoServer) {
         await mongoServer.stop();
     }
-    jest.restoreAllMocks();
-});
 
-module.exports = {
-    getTestDb: () => db
-};
+    database.initDB.mockRestore();
+    database.getDatabase.mockRestore();
+});

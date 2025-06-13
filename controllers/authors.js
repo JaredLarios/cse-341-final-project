@@ -34,7 +34,7 @@ const getAll = async (req, res, next) => {
                                     .collection("Authors")
                                     .aggregate([lookup,aggregateSetting]);
         
-        if(!response) throw createError(404, "Not Authors found");
+        if(!response.length) throw createError(404, "Not Authors found");
 
         response.toArray().then((author) => {
             res.setHeader("Content-Type", "application/json");
@@ -62,6 +62,8 @@ const getSingleById = async (req, res, next) => {
                                         lookup,
                                         aggregateSetting
                                     ]).toArray();
+
+        if(!response.length) throw createError(404, "Not Authors found");
         
         res.status(200).json(response[0]);
     } catch (err) {
@@ -89,7 +91,7 @@ const getByQueries = async (req, res, next) => {
                                         aggregateSetting
                                     ]).toArray();
 
-        if(!response) throw createError(404, "Actors Name not found");
+        if(!response.length) throw createError(404, "Not Authors found");
         
         return res.status(200).json(response);
     } catch (err) {

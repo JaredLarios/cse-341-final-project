@@ -11,6 +11,8 @@ const port = process.env.PORT || 8080;
 const app = express();
 
 app
+    .use(express.json())
+    .use(express.urlencoded({ extended: true }))
     .use(bodyParser.json())
     .use(session({
         secret: 'secret',
@@ -70,20 +72,14 @@ app.get('/github/callback', passport.authenticate('github', {
 )
 
 
-const initServer = () => {
-    mongodb.initDB((err) => {
-        if(err) {
-            console.log("DB: "+ err);
-        } else {
-            app.listen(port, () => {
-                console.log(`Database init and server Running on port ${port}`);
-            });
-        }
-    });
-};
-
-if (process.env.NODE_ENV !== 'test') {
-    initServer();
-}
+mongodb.initDB((err) => {
+    if(err) {
+        console.log("DB: "+ err);
+    } else {
+        app.listen(port, () => {
+            console.log(`Database init and server Running on port ${port}`);
+        });
+    }
+});
 
 module.exports = { app };

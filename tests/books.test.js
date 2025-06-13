@@ -1,6 +1,7 @@
-const request = require('supertest')
+const request = require("supertest");
 const { app } = require('../server');
-const { getTestDb } = require('./setup')
+const database = require('../data/database')
+const { ObjectId } = require('mongodb');
 
 describe('POST /books', () => {
     let testDb;
@@ -9,12 +10,12 @@ describe('POST /books', () => {
         releaseDate: '1967-05-30',
         language: 'spa',
         authorId: '6840f2c9a41bbeb60f77d2fb',
-        quantity: 1,
+        quantity: Number(1),
         available: true
     };
 
     beforeEach(() => {
-        testDb = getTestDb();
+        testDb = database.getDatabase().db();
     });
 
     it('Should create a book', async () => {
@@ -160,5 +161,69 @@ describe('POST /books', () => {
         const newBook = await testDb.collection('Books').findOne({ title: newBookData.title });
         expect(newBook).toBeNull();
         expect(newBook?.title).not.toBe(bookData.title);
+    })
+})
+
+describe('GET /books, /books/id, books/search', () => {
+    let testDb;
+    const bookData = {
+        title: 'Dias de Gracias - test',
+        releaseDate: '1967-05-30',
+        language: 'spa',
+        authorId: '6840f2c9a41bbeb60f77d2fb',
+        quantity: "1",
+        available: true
+    };
+
+    beforeEach(() => {
+        testDb = database.getDatabase().db();
+    });
+
+    it('Should fidn all books', async () => {
+        const dbResponse = await testDb.collection('Books').find().toArray();
+        const response = await request(app)
+            .get(`/books/`);
+
+            expect(response.statusCode).toBe(200);
+            expect(response.body.length).toBeGreaterThan(0);
+    })
+
+    it('Should find only one by ID book', async () => {
+        const book = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = book._id;
+        const response = await request(app)
+            .get(`/books/id/${id}`);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toMatchObject({
+            title: bookData.title,
+            releaseDate: bookData.releaseDate,
+            language: bookData.language,
+            quantity: bookData.quantity,
+            available: bookData.available
+        });
+    })
+
+    it('Should not find only one by ID book', async () => {
+        const book = await testDb.collection('Books').findOne({title: bookData.title})
+        const id = book._id;
+        const response = await request(app)
+            .get(`/books/id/${id}ss`);
+
+        expect(response.statusCode).toBe(422);
+    })
+
+    it('Should fin by query some books', async () => {
+        const res = await request(app)
+            .get(`/books/search?title=${bookData.title}`);
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.length).toBeGreaterThan(0);
+    })
+    it('Should create a book', async () => {
+        const res = await request(app)
+            .get(`/books/search?title=`);
+
+        expect(res.statusCode).toBe(422);
     })
 })
