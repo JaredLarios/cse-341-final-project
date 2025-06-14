@@ -1,5 +1,5 @@
 jest.mock('../middlewares/authenticate', () => ({
-    isAuthenticated: jest.fn(() => (req, res, next) => next())
+    isAuthenticated: jest.fn((req, res, next) => next())
 }));
 
 

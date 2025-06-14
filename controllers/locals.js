@@ -147,7 +147,7 @@ const addLocals = async (req, res, next) => {
     if (response.acknowledged) {
         return res.status(204).send();
     } else {
-        res.status(500).json(response.error || "Some error occurred while adding the movie.")
+        res.status(500).json(response.error || "Some error occurred while adding the local.")
     }
 }
 
