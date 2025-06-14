@@ -5,10 +5,16 @@ const localValidationRules = () => {
         body('name')
             .isString()
             .trim()
+            .isLength({ min: 2 })
+            .notEmpty()
+            .exists({ checkNull: true, checkFalsy: true })
             .withMessage('Name must be a String'),
         body('address')
             .isString()
             .trim()
+            .isLength({ min: 2 })
+            .notEmpty()
+            .exists({ checkNull: true, checkFalsy: true })
             .withMessage('Address must be a String'),
         body('booksOnStockIDs')
             .optional()
@@ -25,6 +31,8 @@ const localValidationRules = () => {
             }),
         body('phone')
             .isInt()
+            .notEmpty()
+            .exists({ checkNull: true, checkFalsy: true })
             .withMessage('Phone must be a valid phone number'),
     ]
 }

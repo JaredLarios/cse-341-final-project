@@ -1,7 +1,11 @@
+jest.mock('../middlewares/authenticate', () => ({
+    isAuthenticated: jest.fn(() => (req, res, next) => next())
+}));
+
 const request = require("supertest");
 const { app } = require('../server');
 const database = require('../data/database')
-const { ObjectId } = require('mongodb');
+
 
 describe('POST /books', () => {
     let testDb;

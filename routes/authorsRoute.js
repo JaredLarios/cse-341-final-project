@@ -7,6 +7,8 @@ const {
     authorValidationId
 } = require('../helpers/authorsValidator')
 
+const { isAuthenticated } = require('../middlewares/authenticate')
+
 
 // GET 
 router.get("/", authorsController.getAll)
@@ -14,13 +16,13 @@ router.get("/id/:id", authorValidationId(), validate, authorsController.getSingl
 router.get("/search", authorValidationQuery(), validate, authorsController.getByQueries)
 
 // POST 
-router.post("/", authorValidationRules(), validate, authorsController.addAuthors)
+router.post("/", isAuthenticated(), authorValidationRules(), validate, authorsController.addAuthors)
 
 // PUT 
-router.put("/id/:id", authorValidationId(), authorValidationRules(), validate, authorsController.updateAuthors)
+router.put("/id/:id", isAuthenticated(), authorValidationId(), authorValidationRules(), validate, authorsController.updateAuthors)
 
 // DELETE 
-router.delete("/id/:id", authorValidationId(), validate, authorsController.deleteAuthors)
+router.delete("/id/:id", isAuthenticated(), authorValidationId(), validate, authorsController.deleteAuthors)
 
 
 module.exports = router;

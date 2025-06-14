@@ -15,7 +15,7 @@ app
     .use(express.urlencoded({ extended: true }))
     .use(bodyParser.json())
     .use(session({
-        secret: 'secret',
+        secret: process.env.SECRET_KEY,
         resave: false,
         saveUninitialized: true,
     }))
