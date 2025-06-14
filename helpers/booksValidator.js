@@ -5,6 +5,7 @@ const booksValidationRules = () => {
     return [
         body('title')
             .isString()
+            .isLength({ min: 2 })
             .trim()
             .notEmpty()
             .withMessage('Title is required and must be a string'),
@@ -27,7 +28,7 @@ const booksValidationRules = () => {
             .withMessage('ID must be hexadecimal'),
 
         body('quantity')
-            .isString()
+            .isInt()
             .trim()
             .notEmpty()
             .withMessage('Quantity is required and must be a string'),
@@ -43,6 +44,7 @@ const bookValidationQuery = () => {
     return [
     query('title')
         .isString()
+        .isLength({min: 1})
         .trim()
         .withMessage('Name must be a String')
     ]

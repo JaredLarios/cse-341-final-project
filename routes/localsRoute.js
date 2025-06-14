@@ -6,6 +6,7 @@ const {
     localValidationQuery,
     localValidationId
 } = require('../helpers/localsValidator')
+const { isAuthenticated } = require('../middlewares/authenticate')
 
 
 // GET 
@@ -14,13 +15,13 @@ router.get("/id/:id", localValidationId(), validate, localsController.getSingleB
 router.get("/search", localValidationQuery(), validate, localsController.getByQueries)
 
 // POST 
-router.post("/", localValidationRules(), validate, localsController.addLocals)
+router.post("/", isAuthenticated, localValidationRules(), validate, localsController.addLocals)
 
 // PUT 
-router.put("/id/:id", localValidationId(), validate, localsController.updateLocals)
+router.put("/id/:id", isAuthenticated, localValidationId(), localValidationRules(), validate, localsController.updateLocals)
 
 // DELETE 
-router.delete("/id/:id", localValidationId(), validate, localsController.deleteLocals)
+router.delete("/id/:id", isAuthenticated, localValidationId(), validate, localsController.deleteLocals)
 
 
 module.exports = router;

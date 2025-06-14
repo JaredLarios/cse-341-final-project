@@ -13,7 +13,10 @@ const lookup = {
 }
 
 const unwindAuthor = {
-    $unwind: "$author"
+    $unwind: {
+      path: "$author",
+      preserveNullAndEmptyArrays: true
+    }
 }
 
 const aggregateSetting = {
@@ -43,7 +46,7 @@ const getAll = async (req, res, next) => {
                               aggregateSetting
                             ]).toArray();
     
-    if(!response) throw createError(404, "Not Books found");
+    if(response.length <= 0 ) throw createError(404, "Not Books found");
     
     res.setHeader("Content-Type", "application/json");
     return res.status(200).json(response);
@@ -60,7 +63,7 @@ const getSingleById = async (req, res, next) => {
     const validID = await validateExistingID(bookId);
     if(!validID) throw createError(404, "Authors ID does not exist");
 
-    const book = await mongodb
+    const response = await mongodb
                             .getDatabase()
                             .db()
                             .collection('Books')
@@ -71,7 +74,7 @@ const getSingleById = async (req, res, next) => {
                               aggregateSetting
                             ]).toArray();
 
-    res.status(200).json(book[0]);
+    return res.status(200).json(response[0]);
   } catch (err) {
     next(err);
   }
@@ -108,12 +111,16 @@ const createBook = async (req, res, next) => {
       title: req.body.title,
       releaseDate: req.body.releaseDate,
       language: req.body.language,
-      authorsID: req.body.authorsID,
+      authorId: req.body.authorsID,
       quantity: req.body.quantity,
       available: req.body.available
     };
 
-    const response = await mongodb.getDatabase().collection('Books').insertOne(book);
+    const response = await mongodb
+                              .getDatabase()
+                              .db()
+                              .collection('Books')
+                              .insertOne(book);
     if (response.acknowledged) {
       res.status(201).json({ message: 'Book created successfully', id: response.insertedId });
     } else {
@@ -132,7 +139,7 @@ const updateBook = async (req, res, next) => {
         title: req.body.title,
         releaseDate: req.body.releaseDate,
         language: req.body.language,
-        authorsID: req.body.authorsID,
+        authorId: req.body.authorsID,
         quantity: req.body.quantity,
         available: req.body.available
     };
@@ -140,7 +147,11 @@ const updateBook = async (req, res, next) => {
     const validID = await validateExistingID(bookId);
     if(!validID) throw createError(404, "Authors ID does not exist");
 
-    const response = await mongodb.getDatabase().collection('Books').replaceOne({ _id: bookId }, book);
+    const response = await mongodb
+                                .getDatabase()
+                                .db()
+                                .collection('Books')
+                                .replaceOne({ _id: bookId }, book);
 
     if (response.modifiedCount > 0) {
       res.status(204).send();
@@ -161,7 +172,11 @@ const deleteBook = async (req, res, next) => {
     }
 
     const bookId = new ObjectId(req.params.id);
-    const response = await mongodb.getDatabase().collection('Books').deleteOne({ _id: bookId });
+    const response = await mongodb
+                                .getDatabase()
+                                .db()
+                                .collection('Books')
+                                .deleteOne({ _id: bookId });
 
     if (response.deletedCount > 0) {
       res.status(204).send();
@@ -175,7 +190,11 @@ const deleteBook = async (req, res, next) => {
 };
 
 const validateExistingID = async (id) => {
-    const authorsID = await mongodb.getDatabase().db().collection("Books").findOne({_id: id});
+    const authorsID = await mongodb
+                                  .getDatabase()
+                                  .db()
+                                  .collection("Books")
+                                  .findOne({_id: id});
     return !!authorsID;
 }
 

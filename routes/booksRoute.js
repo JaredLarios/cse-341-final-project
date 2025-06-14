@@ -8,6 +8,7 @@ const {
     bookValidationId
 } = require('../helpers/booksValidator');
 const validate = require('../helpers/validate')
+const { isAuthenticated } = require('../middlewares/authenticate')
 
 
 
@@ -17,14 +18,14 @@ router.get('/id/:id', bookValidationId(), validate, booksController.getSingleByI
 router.get('/search', bookValidationQuery(), validate, booksController.getByQuery);
 
 // POST 
-router.post('/', booksValidationRules(), validate, booksController.createBook);
+router.post('/', isAuthenticated, booksValidationRules(), validate, booksController.createBook);
 
 // PUT 
-router.put('/id/:id', bookValidationId(),validate, booksController.updateBook);
+router.put('/id/:id', isAuthenticated, bookValidationId(), booksValidationRules(), validate, booksController.updateBook);
 
 
 // DELETE 
-router.delete('/id/:id', bookValidationId(), validate, booksController.deleteBook);
+router.delete('/id/:id', isAuthenticated, bookValidationId(), validate, booksController.deleteBook);
 
 
 
