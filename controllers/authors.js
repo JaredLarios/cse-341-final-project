@@ -32,14 +32,12 @@ const getAll = async (req, res, next) => {
                                     .getDatabase()
                                     .db()
                                     .collection("Authors")
-                                    .aggregate([lookup,aggregateSetting]);
+                                    .aggregate([lookup,aggregateSetting]).toArray();
         
-        if(!response.length) throw createError(404, "Not Authors found");
+        if(response.length <= 0) throw createError(404, "Not Authors found");
 
-        response.toArray().then((author) => {
-            res.setHeader("Content-Type", "application/json");
-            res.status(200).json(author);
-        })
+        res.setHeader("Content-Type", "application/json");
+        return res.status(200).json(response);
     } catch (err) {
         next(err);
     }

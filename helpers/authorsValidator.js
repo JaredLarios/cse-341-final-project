@@ -5,23 +5,27 @@ const authorValidationRules = () => {
         body('name')
             .isString()
             .isLength({ min: 1 })
+            .exists({ checkNull: true, checkFalsy: true })
             .notEmpty()
             .trim()
             .withMessage('Name must be a String'),
         body('lastname')
             .isString()
             .isLength({ min: 1 })
+            .exists({ checkNull: true, checkFalsy: true })
             .notEmpty()
             .trim()
             .withMessage('Last Name must be a String'),
         body('dateOfBirth')
             .isString()
             .isLength({ min: 1 })
+            .exists({ checkNull: true, checkFalsy: true })
             .notEmpty()
             .withMessage('Date Of Birth must be a Date'),
         body('country')
             .isString()
             .isLength({ min: 1 })
+            .exists({ checkNull: true, checkFalsy: true })
             .notEmpty()
             .trim()
             .withMessage('Country must be a String'),
@@ -41,17 +45,20 @@ const authorValidationRules = () => {
         body('gender')
             .isString()
             .isLength({ min: 1 })
+            .exists({ checkNull: true, checkFalsy: true })
             .notEmpty()
             .trim()
             .withMessage('Gender must be a String'),
         body('biography')
             .isString()
             .isLength({ min: 1 })
+            .exists({ checkNull: true, checkFalsy: true })
             .notEmpty()
             .trim()
             .withMessage('Biography must be a String'),
         body('alive')
-            .isBoolean().withMessage('Alive must be a boolean'),
+            .isBoolean()
+            .withMessage('Alive must be a boolean'),
     ]
 }
 
