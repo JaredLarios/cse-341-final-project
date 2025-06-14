@@ -3,10 +3,10 @@ const dotenv = require('dotenv');
 
 const doc = {
     info: {
-        title: "Movies API",
-        description: "Movies database for cse project 2",
+        title: "Library API",
+        description: "Library database for cse final porject",
     },
-    host: 'https://cse-341-final-project-3uvz.onrender.com',
+    host: 'cse-341-final-project-3uvz.onrender.com',
     schemes: ["https"],
 };
 
